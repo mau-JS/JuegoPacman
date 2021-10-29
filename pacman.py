@@ -10,6 +10,12 @@ Exercises
 
 """
 
+'''Herramientas Computacionales: El Arte de la Programación
+Grupo: 201   TC1001S
+Modified by:
+        Léa Rodríguez Jouault A01659896   
+        Mauricio Juárez Sánchez A01660336'''
+
 from random import choice
 from turtle import *
 from freegames import floor, vector
@@ -19,13 +25,14 @@ path = Turtle(visible=False)
 writer = Turtle(visible=False)
 aim = vector(5, 0)
 pacman = vector(-40, -80)
-ghosts = [
+ghosts = [ # inicio de coordenadas de los fantasmas
     [vector(-180, 160), vector(5, 0)],
     [vector(-180, -160), vector(0, 5)],
     [vector(100, 160), vector(0, -5)],
     [vector(100, -160), vector(-5, 0)],
 ]
-#Los ceros son los espacios
+
+# Los ceros son los espacios
 # Los unos son el camino
 tiles = [
     0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -129,13 +136,24 @@ def move():
         if valid(point + course):
             point.move(course)
         else:
-            options = [
+            options = [ # opciones de movimiento
                 vector(5, 0),
                 vector(-5, 0),
                 vector(0, 5),
                 vector(0, -5),
             ]
-            plan = choice(options)
+
+            if pacman.x > point.x: # comprando en x los vectores
+                if pacman.y > point.y: # si la y de pacman es superior al punto = pacman está a la derecha
+                    plan = options[0] and options[1] # se mueve a la derecha y arriba
+                else:
+                    plan = options[0] and options[3] # se mueve a la derecha y abajo
+            else:
+                if pacman.y > point.y: # pacman está a la izquierda
+                    plan = options[1] and options[2] # se mueve a la izquierda y arriba
+                else:
+                    plan = options[1] and options[3] # se mueve a la izquierda y abajo
+
             course.x = plan.x
             course.y = plan.y
 
@@ -149,7 +167,9 @@ def move():
         if abs(pacman - point) < 20:
             return
 
-    ontimer(move, 5)
+    # se modifica la velocidad de los fantasmas y del pacman aquí
+    # mientras más chico el número más rápido irán
+    ontimer(move, 5) 
 
 def change(x, y):
     "Change pacman aim if valid."
